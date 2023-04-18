@@ -142,3 +142,36 @@ primos' :: Int -> [Int]
 primos' n = [x | x <-[2..n], primo' x]
 
 --Ejercicio 20:
+pCartesiano :: [Int] -> [Int] -> [(Int, Int)]
+pCartesiano [] [] = []
+pCartesiano xs [] = []
+pCartesiano [] ys = []
+pCartesiano xs ys = [(x, y) | x <- xs, y <- ys]
+
+--Ejercicio 21:
+ocurrencias :: (Eq a) => a -> [a] -> Int
+ocurrencias _ [] = 0
+ocurrencias n xs = sum (listUno [x | x <- xs, x == n])
+
+--Ejercicio 22:
+split2 :: [a] -> [([a],[a])] 
+split2 xs = [auxs x xs | x <- [0..length xs]]
+
+auxs :: Int -> [a] -> ([a],[a])
+auxs _ [] = ([], [])
+auxs 0 xs = ([], xs)
+auxs n xs = (take n xs, tirar xs n)
+
+tirar :: [a] -> Int -> [a]
+tirar [] n = []
+tirar xs 0 = xs
+tirar (x:xs) n = tirar xs (n-1)
+
+--Ejercicio 23:
+sumSegmentos :: [Int] -> Int
+sumSegmentos [] = 0
+sumSegmentos xs = sum [sum (take x xs) | x <- [1..length xs]]
+
+--Ejercicio 24:
+linfPares :: [Int]
+linfPares = [x | x <- [1..], (mod x 2) == 0]
