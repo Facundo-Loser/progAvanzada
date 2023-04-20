@@ -45,6 +45,11 @@ listPrimos :: [Int] -> [Int]
 listPrimos [] = []
 listPrimos (x:xs) = if primo x then x:(listPrimos xs) else listPrimos xs
 
+--Solucción correcta:
+soloPrimos :: [Int] -> [Int]
+soloPrimos [] = []
+soloPrimos xs = filter (primo) xs
+
 --Ejercicio 8:
 --Función auxiliar:
 sumatoria :: [Int] -> Int
@@ -54,10 +59,23 @@ sumatoria (x:xs) = x + (sumatoria xs)
 sumCuad :: [Int] -> Int
 sumCuad xs = sumatoria(cuadList xs)
 
+--Solución correcta:
+cuads' :: [Int] -> [Int]
+cuads' [] = []
+cuads' xs = map (^2) xs
+
+sumCuads' :: [Int] -> Int
+sumCuads' xs = foldr (+) 0 (cuads' xs)
+
 --Ejercicio 9:
 listSucc :: [Int] -> [Int]
 listSucc [] = []
 listSucc (x:xs) = (succ x):(listSucc xs)
+
+--Solución correcta:
+sucesores' :: [Int] -> [Int]
+sucesores' [] = []
+sucesores' xs = map (succ) xs
 
 --Ejercicio 10:
 sumList :: [Int] -> Int
@@ -122,6 +140,12 @@ todosOcurrenEn xs [] = False
 todosOcurrenEn [] ys = True
 todosOcurrenEn (x:xs) ys = if enLista x ys then True && (todosOcurrenEn xs ys) else False
 
+todosOcurrenEn2 :: (Eq a) => [a] -> [a] -> Bool
+todosOcurrenEn2 [] [] = True
+todosOcurrenEn2 xs [] = False
+todosOcurrenEn2  [] ys = False
+todosOcurrenEn2 xs ys = and [x `elem` ys | x <- xs]
+
 --Ejercicio 19:
 primo' :: Int -> Bool
 primo' 1 = False
@@ -153,6 +177,11 @@ ocurrencias :: (Eq a) => a -> [a] -> Int
 ocurrencias _ [] = 0
 ocurrencias n xs = sum (listUno [x | x <- xs, x == n])
 
+--Otra forma:
+ocurrencias' :: (Eq a) => a -> [a] -> Int
+ocurrencias' _ [] = 0
+ocurrencias' n xs = length [x | x <- xs, x == n]
+
 --Ejercicio 22:
 split2 :: [a] -> [([a],[a])] 
 split2 xs = [auxs x xs | x <- [0..length xs]]
@@ -175,3 +204,4 @@ sumSegmentos xs = sum [sum (take x xs) | x <- [1..length xs]]
 --Ejercicio 24:
 linfPares :: [Int]
 linfPares = [x | x <- [1..], (mod x 2) == 0]
+
