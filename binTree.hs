@@ -1,4 +1,7 @@
-data BinTree a = Nil | Node (BinTree a) a (BinTree a) deriving (Show, Eq)
+import Prelude hiding (show)
+import qualified Prelude
+
+data BinTree a = Nil | Node (BinTree a) a (BinTree a) deriving Eq
 
 --Función que suma todos los elementos de un arbol binario de enteros 
 sumTree :: BinTree Int -> Int
@@ -32,9 +35,34 @@ iguales (Node hi1 r1 hd1) (Node hi2 r2 hd2)
         | r1 == r2 = (iguales hi1 hi2) && (iguales hd1 hd2)
         | otherwise = False
 
+--Función que genera un arbol de enteros de forma decreciente a partir de un número:
+generarArbol :: Int -> BinTree Int
+generarArbol 0 = (Node Nil 0 Nil)
+generarArbol 1 = (Node Nil 1 Nil)
+generarArbol n = (Node (generarArbol (n-1)) n (generarArbol (n-2)))
+
+--Función que dice si un elem está en un árbol binario:
+buscarElem :: (Eq a) => BinTree a -> a -> Bool
+buscarElem Nil _ = False
+buscarElem (Node Nil r Nil) n = r == n
+buscarElem (Node hi r hd) n = if n == r then True else buscarElem hi n || buscarElem hd n
+
+--Función que duvuelve la cantidad de nodos de un árbol binario:
+cantNodos :: BinTree a -> Int
+cantNodos Nil = 0
+cantNodos (Node Nil r Nil) = 1
+cantNodos (Node hi r hd) = 1 + (cantNodos hi) + (cantNodos hd)
+
+--Función que invierte un árbol binario:
+invertir :: BinTree a -> BinTree a
+invertir Nil = Nil
+invertir (Node Nil r Nil) = (Node Nil r Nil)
+invertir (Node hi r hd) = (Node (invertir hd) r (invertir hi))
+
 
 --Implementación sin terminar de un mejor Show para BinTree.
 
 --instance (Show a) => Show (BinTree a) where
 --show Nil = "<>"
+--show (Node Nil r Nil) = "<" ++ show Nil ++ "<" ++ show r ++ ">" ++ show Nil ">"
 --show (Node hi r hd) = "<" ++ show hi ++ ", <" ++ show r ++ ">," ++ show hd ++ ">"
