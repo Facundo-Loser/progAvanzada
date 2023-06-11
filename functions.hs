@@ -1,4 +1,4 @@
---Funciones sin completar de tp de avanzada:
+--FUNCIONES DEL TP DE AVANZADA:
 
 -- | La funcion otro Jugador, dado un jugador, devuelve el otro jugador, por ejemplo: otroJugador C = H
 otroJugador :: Jugador -> Jugador
@@ -22,6 +22,7 @@ hacerJugada n (j, k) | (elem n jugadas) && (n <= k) = (j, k - n)
 -- 	En el caso mejorJug (H, k) tenemos que devolver la jugada que nos da el valor minimo (es decir, consideramos 
 -- 	la mejor jugada para H, que seria la peor para C).
 
+--VERSIÓN 1: (no tan óptima)
 mejorJug :: Estado -> Int
 mejorJug (j, k) | k == 1 = 1
                 | k == 2 = 1
@@ -29,17 +30,36 @@ mejorJug (j, k) | k == 1 = 1
                 | k == 4 = 4
                 | k > 4 = if j == C then aux (C, k) else aux (H, k)
 
+--VERSIÓN 2: (Un poco mejor)
+mejorJug' :: Estado -> Int
+mejorJug' (j, k) | k == 1 = 1
+                 | k == 2 = 1
+                 | k == 3 = 3
+                 | k == 4 = 4
+                 | k > 4 && j == C =  if elem k (juegosGanadores k) then 4 else aux (C, k)
+                 | k > 4 && j == H =	 if elem k [i | i <- [1..k], not(elem i (juegosGanadores k))] then 4 else aux (H, k)      
+
+--Estas dos versiones funcionan correctamente pero ninguna es lo suficientemente óptima como para hacer que la computadora gane siempre
+
 
 --Se supone que k > 4 para llamar a esta función 
+--Dado un estado se consideran todas las posibles jugadas y se llama a evalEstado para ver si en cada caso el humano o la computadora es ganador.
+--Por ejemplo: dado (C, 10) las posibles jugadas son que C saque 1, 3 o 4 piedras: (H, 9), (H, 7), (H, 6), y luego de aca se llama a evalEstado con cada una.
 --Pd: ya se que lo que hice con los if es un crimen de guerra pero no se me ocurria una forma mas elegante de hacerlo.
 aux :: Estado -> Int 
-aux (j, k) | j == C = if evalEstado (H, (k-1)) == CGano then 1 else if evalEstado (H, (k-3)) == CGano then 3 else if evalEstado (H, (k-4)) == CGano then 4 else 1 
-           | j == H = if evalEstado (C, (k-1)) == CPerdio then 1 else if evalEstado (C, (k-3)) == CPerdio then 3 else if evalEstado (H, (k-4)) == CPerdio then 4 else 1
+aux (j, k) | j == C = if evalEstado (H, (k-1)) == CGano then 1 else if evalEstado (H, (k-3)) == CGano then 3 else if evalEstado (H, (k-4)) == CGano then 4 else 4 
+           | j == H = if evalEstado (C, (k-1)) == CPerdio then 1 else if evalEstado (C, (k-3)) == CPerdio then 3 else if evalEstado (H, (k-4)) == CPerdio then 4 else 4
 
 
 -- juegosGanadores k, calcula todos los comienzos ganadores para la computadora hasta con k piedras
 -- por ejemplo, juegosGanadores 10 = [2,7,9]
-
---(Esta solución no es correcta)
 juegosGanadores :: Int -> [Int]
-juegosGanadores i = [x | x <- [0..i], evalEstado(C, x) == CGano] 
+juegosGanadores i = [x | x <- [0..i], evalEstado(C, x) == CPerdio] 
+
+
+
+--FUNCIONES AUXILIARES QUE PODRÍAN LLEGAR A SER ÚTILES:
+
+--Devuelve todas las jugadas posibles dado un estado:
+jugs :: Estado -> [Estado]
+jugs (j, k) = [(otroJugador j, k - i) | i<- jugadas, i<=k]  
