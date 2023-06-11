@@ -25,19 +25,21 @@ hacerJugada n (j, k) | (elem n jugadas) && (n <= k) = (j, k - n)
 mejorJug :: Estado -> Int
 mejorJug (j, k) | k == 1 = 1
                 | k == 2 = 1
-				| k == 3 = 3
-				| k == 4 = 4
-				| k > 4 = if j == C then aux (C, k) else aux (H, k)
+                | k == 3 = 3
+                | k == 4 = 4
+                | k > 4 = if j == C then aux (C, k) else aux (H, k)
 
 
 --Se supone que k > 4 para llamar a esta función 
 --Pd: ya se que lo que hice con los if es un crimen de guerra pero no se me ocurria una forma mas elegante de hacerlo.
 aux :: Estado -> Int 
 aux (j, k) | j == C = if evalEstado (H, (k-1)) == CGano then 1 else if evalEstado (H, (k-3)) == CGano then 3 else if evalEstado (H, (k-4)) == CGano then 4 else 1 
-	       | j == H = if evalEstado (C, (k-1)) == CPerdio then 1 else if evalEstado (C, (k-3)) == CPerdio then 3 else if evalEstado (H, (k-4)) == CPerdio then 4 else 1
+           | j == H = if evalEstado (C, (k-1)) == CPerdio then 1 else if evalEstado (C, (k-3)) == CPerdio then 3 else if evalEstado (H, (k-4)) == CPerdio then 4 else 1
 
 
 -- juegosGanadores k, calcula todos los comienzos ganadores para la computadora hasta con k piedras
 -- por ejemplo, juegosGanadores 10 = [2,7,9]
+
+--(Esta solución no es correcta)
 juegosGanadores :: Int -> [Int]
 juegosGanadores i = [x | x <- [0..i], evalEstado(C, x) == CGano] 
