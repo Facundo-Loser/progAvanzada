@@ -42,6 +42,22 @@ mejorJug' (j, k) | k == 1 = 1
 --Estas dos versiones funcionan correctamente pero ninguna es lo suficientemente óptima como para hacer que la computadora gane siempre
 
 
+--VERSION 3: (mejor que las dos anteriores creo)
+mejorJug3 :: Estado -> Int
+mejorJug3 (j, k) | k == 1 = 1
+                 | k == 2 = 1
+                 | k == 3 = 3
+                 | k == 4 = 4
+                 | k > 4 = aux (j, k)
+
+aux2 :: Estado -> Int
+aux2 (j, k) | j == C = maximum [x | x <- jugadas, evalEstado (H, (k-x)) == CGano]
+            | j == H = minimum [x | x <- jugadas, evalEstado (C, (k-x)) == CPerdio]
+
+
+
+
+
 --Se supone que k > 4 para llamar a esta función 
 --Dado un estado se consideran todas las posibles jugadas y se llama a evalEstado para ver si en cada caso el humano o la computadora es ganador.
 --Por ejemplo: dado (C, 10) las posibles jugadas son que C saque 1, 3 o 4 piedras: (H, 9), (H, 7), (H, 6), y luego de aca se llama a evalEstado con cada una.
