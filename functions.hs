@@ -48,7 +48,7 @@ mejorJug3 (j, k) | k == 1 = 1
                  | k == 2 = 1
                  | k == 3 = 3
                  | k == 4 = 4
-                 | k > 4 = aux (j, k)
+                 | k > 4 = aux2 (j, k)
 
 aux2 :: Estado -> Int
 aux2 (j, k) | j == C = maximum [x | x <- jugadas, evalEstado (H, (k-x)) == CGano]
