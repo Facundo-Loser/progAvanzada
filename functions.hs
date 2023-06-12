@@ -36,8 +36,8 @@ mejorJug' (j, k) | k == 1 = 1
                  | k == 2 = 1
                  | k == 3 = 3
                  | k == 4 = 4
-                 | k > 4 && j == C =  if elem k (juegosGanadores k) then 4 else aux (C, k)
-                 | k > 4 && j == H =	 if elem k [i | i <- [1..k], not(elem i (juegosGanadores k))] then 4 else aux (H, k)      
+                 | k > 4 && j == C =  aux (C, k)
+                 | k > 4 && j == H =  if elem k [i | i <- [1..k], not(elem i (juegosGanadores k))] then 4 else aux (H, k)      
 
 --Estas dos versiones funcionan correctamente pero ninguna es lo suficientemente óptima como para hacer que la computadora gane siempre
 
@@ -54,8 +54,7 @@ aux (j, k) | j == C = if evalEstado (H, (k-1)) == CGano then 1 else if evalEstad
 -- juegosGanadores k, calcula todos los comienzos ganadores para la computadora hasta con k piedras
 -- por ejemplo, juegosGanadores 10 = [2,7,9]
 juegosGanadores :: Int -> [Int]
-juegosGanadores i = [x | x <- [0..i], evalEstado(C, x) == CPerdio] 
-
+juegosGanadores i = [x | x <- [1..i], evalEstado(H, x) == CGano] 
 
 
 --FUNCIONES AUXILIARES QUE PODRÍAN LLEGAR A SER ÚTILES:
